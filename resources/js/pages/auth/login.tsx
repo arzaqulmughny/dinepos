@@ -1,110 +1,49 @@
-import { Head, useForm } from '@inertiajs/react';
-import { LoaderCircle } from 'lucide-react';
-import { FormEventHandler } from 'react';
+import Button from "@/components/auth/Button";
+import Input from "@/components/auth/Input";
+import { Head, Link, useForm } from "@inertiajs/react";
 
-import InputError from '@/components/input-error';
-import TextLink from '@/components/text-link';
-import { Button } from '@/components/ui/button';
-import { Checkbox } from '@/components/ui/checkbox';
-import { Input } from '@/components/ui/input';
-import { Label } from '@/components/ui/label';
-import AuthLayout from '@/layouts/auth-layout';
-
-type LoginForm = {
-    email: string;
-    password: string;
-    remember: boolean;
-};
-
-interface LoginProps {
-    status?: string;
-    canResetPassword: boolean;
-}
-
-export default function Login({ status, canResetPassword }: LoginProps) {
-    const { data, setData, post, processing, errors, reset } = useForm<Required<LoginForm>>({
-        email: '',
+/**
+ * Login page
+ */
+const Login = () => {
+    const { data, setData, errors, post, processing } = useForm({
+        email_username: '',
         password: '',
-        remember: false,
     });
 
-    const submit: FormEventHandler = (e) => {
-        e.preventDefault();
-        post(route('login'), {
-            onFinish: () => reset('password'),
-        });
-    };
+    const onSubmit = (event: React.FormEvent<HTMLFormElement>) => {
+        event.preventDefault();
+
+        post(route('login'));
+    }
 
     return (
-        <AuthLayout title="Log in to your account" description="Enter your email and password below to log in">
-            <Head title="Log in" />
+        <>
+            <Head title="Login" />
 
-            <form className="flex flex-col gap-6" onSubmit={submit}>
-                <div className="grid gap-6">
-                    <div className="grid gap-2">
-                        <Label htmlFor="email">Email address</Label>
-                        <Input
-                            id="email"
-                            type="email"
-                            required
-                            autoFocus
-                            tabIndex={1}
-                            autoComplete="email"
-                            value={data.email}
-                            onChange={(e) => setData('email', e.target.value)}
-                            placeholder="email@example.com"
-                        />
-                        <InputError message={errors.email} />
+            <div className="bg-gradient-to-br from-[#F58A87] to-[#FB923C] w-full h-screen flex flex-col items-center justify-center gap-20">
+                <Link href="#" title="DinePOS Logo" className="w-[48px] object-contain">
+                    <img src="/assets/images/dinepos.png" alt="DinePOS Logo" className="w-full h-full" />
+                </Link>
+
+                <form onSubmit={onSubmit} className="bg-slate-50/80 px-12 py-11 rounded-[15px] max-w-[500px] flex flex-col gap-y-8">
+                    <div className="flex flex-col gap-y-1">
+                        <h1 className="text-slate-800 text-[28px] font-bold">Login</h1>
+                        <p className="text-slate-800 font-normal text-[12px]">Silakan masuk untuk mengakses akun Anda dan mulai mengelola bisnis dengan mudah.</p>
                     </div>
 
-                    <div className="grid gap-2">
-                        <div className="flex items-center">
-                            <Label htmlFor="password">Password</Label>
-                            {canResetPassword && (
-                                <TextLink href={route('password.request')} className="ml-auto text-sm" tabIndex={5}>
-                                    Forgot password?
-                                </TextLink>
-                            )}
-                        </div>
-                        <Input
-                            id="password"
-                            type="password"
-                            required
-                            tabIndex={2}
-                            autoComplete="current-password"
-                            value={data.password}
-                            onChange={(e) => setData('password', e.target.value)}
-                            placeholder="Password"
-                        />
-                        <InputError message={errors.password} />
+                    <div className="flex flex-col gap-y-4">
+                        <Input name="email_username" placeholder="Email atau username" value={data.email_username} onChange={(event) => setData('email_username', event.target.value)} invalidMessage={errors.email_username} />
+                        <Input name="password" placeholder="Password" type="password" value={data.password} onChange={(event) => setData('password', event.target.value)} invalidMessage={errors.password} />
                     </div>
 
-                    <div className="flex items-center space-x-3">
-                        <Checkbox
-                            id="remember"
-                            name="remember"
-                            checked={data.remember}
-                            onClick={() => setData('remember', !data.remember)}
-                            tabIndex={3}
-                        />
-                        <Label htmlFor="remember">Remember me</Label>
-                    </div>
+                    <Button loading={processing}>Login</Button>
+                </form>
 
-                    <Button type="submit" className="mt-4 w-full" tabIndex={4} disabled={processing}>
-                        {processing && <LoaderCircle className="h-4 w-4 animate-spin" />}
-                        Log in
-                    </Button>
-                </div>
-
-                <div className="text-muted-foreground text-center text-sm">
-                    Don't have an account?{' '}
-                    <TextLink href={route('register')} tabIndex={5}>
-                        Sign up
-                    </TextLink>
-                </div>
-            </form>
-
-            {status && <div className="mb-4 text-center text-sm font-medium text-green-600">{status}</div>}
-        </AuthLayout>
-    );
+                <p className="text-[12px]"><span className="font-semibold">DinePOS</span> | Code with love by <a href="https://github.com/arzaqulmughny" target="_blank" className="font-semibold hover:underline">Arza</a></p>
+            </div>
+        </>
+    )
 }
+
+export default Login;
