@@ -13,7 +13,6 @@ const Login = () => {
 
     const onSubmit = (event: React.FormEvent<HTMLFormElement>) => {
         event.preventDefault();
-
         post(route('login'));
     }
 
@@ -33,7 +32,7 @@ const Login = () => {
                     </div>
 
                     <div className="flex flex-col gap-y-4">
-                        <Input name="email_username" placeholder="Email atau username" value={data.email_username} onChange={(event) => setData('email_username', event.target.value)} invalidMessage={errors.email_username} />
+                        <Input name="email_username" placeholder="Email atau username" value={data.email_username} onChange={(event) => setData('email_username', event.target.value)} invalidMessage={errors.email_username} autoFocus />
                         <Input name="password" placeholder="Password" type="password" value={data.password} onChange={(event) => setData('password', event.target.value)} invalidMessage={errors.password} />
                     </div>
 

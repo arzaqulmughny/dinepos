@@ -24,6 +24,8 @@ class AuthController extends Controller
         $request->authenticate();
         $request->session()->regenerate();
 
+        $request->session()->flash('message', 'Selamat Datang ' . $request->user()->name . '! Anda berhasil masuk ke ' . env('APP_NAME') . '.');
+
         return redirect()->intended('home');
     }
 

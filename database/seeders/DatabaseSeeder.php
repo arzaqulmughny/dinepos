@@ -2,6 +2,7 @@
 
 namespace Database\Seeders;
 
+use App\Models\Setting;
 use App\Models\User;
 // use Illuminate\Database\Console\Seeds\WithoutModelEvents;
 use Illuminate\Database\Seeder;
@@ -22,6 +23,13 @@ class DatabaseSeeder extends Seeder
             'email' => 'developer@demo.com',
             'password' => Hash::make('demo'),
             'role' => 'developer',
+        ]);
+
+        // Create default setting
+        Setting::firstOrCreate([
+            'key' => 'company_name',
+        ], [
+            'default_value' => 'DineResto',
         ]);
     }
 }
