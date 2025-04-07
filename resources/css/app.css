@@ -15,7 +15,7 @@
     --radius-md: calc(var(--radius) - 2px);
     --radius-sm: calc(var(--radius) - 4px);
 
-    --color-background: var(--background);
+    --color-background: transparent;
     --color-foreground: var(--foreground);
 
     --color-card: var(--card);
@@ -198,11 +198,8 @@
 }
 
 @layer base {
-    * {
-        @apply border-border;
-    }
-
     body {
+        border: none;
         @apply bg-background text-foreground;
     }
 }

@@ -41,3 +41,15 @@ export interface User {
     updated_at: string;
     [key: string]: unknown; // This allows for additional properties...
 }
+
+export interface Order {
+    id: number;
+    name: string;
+    sku: string;
+    quantity: number;
+    available: number;
+    attribute: string;
+    image: string;
+    price: string;
+    notes: string;
+}

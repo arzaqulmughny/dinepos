@@ -6,7 +6,7 @@ use Inertia\Inertia;
 
 Route::group(['middleware' => ['auth']], function () {
     Route::controller(HomeController::class)->group(function () {
-        Route::get('/', 'menu');
+        Route::get('/', 'menu')->name('menu');
         Route::get('/histories', 'history');
     });
 });
