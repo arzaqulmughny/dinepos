@@ -7,8 +7,8 @@ const orders: Order[] = [
         id: 1,
         name: 'Nasi Ayam Geprek',
         sku: 'AYG-001',
-        quantity: 100,
-        available: 100,
+        quantity: 1,
+        available: 50,
         attribute: 'Sambal Bawang - Porsi Jumbo',
         image: 'https://placehold.co/50',
         price: 'Rp. 15.000.00',
@@ -43,7 +43,7 @@ const Sidebar = () => {
         <aside className='bg-white rounded-[15px] border border-slate-200 overflow-hidden m-1.5 py-6 sticky h-[calc(100vh-75px)] top-[70px] right-0 w-[700px] flex flex-col gap-y-5'>
             <div className='flex flex-col gap-y-1 px-7'>
                 <div className='flex justify-between'>
-                    <h1 className='font-bold text-[16px] text-slate-800'>Daftar Pesanan (4)</h1>
+                    <h1 className='font-bold text-[16px] text-slate-800'>Daftar Pesanan ({orders.length})</h1>
                     <SidebarMenu />
                 </div>
                 <p className='font-normal text-[14px] text-slate-800'>Sesuaikan pesanan atau langsung terima pembayaran.</p>
@@ -104,18 +104,7 @@ const Sidebar = () => {
                         </span>
                     </button>
 
-                    <button type="button" className='flex gap-x-2.5 items-center rounded-[15px] px-8 py-3 bg-orange-400 hover:brightness-95 cursor-pointer relative overflow-hidden'>
-                        <span className='w-4 h-4 text-white'><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor"><path d="M3.00488 4.00293H21.0049C21.5572 4.00293 22.0049 4.45064 22.0049 5.00293V19.0029C22.0049 19.5552 21.5572 20.0029 21.0049 20.0029H3.00488C2.4526 20.0029 2.00488 19.5552 2.00488 19.0029V5.00293C2.00488 4.45064 2.4526 4.00293 3.00488 4.00293ZM6.50037 6H4.00037V8.5C5.38108 8.5 6.50037 7.38071 6.50037 6ZM17.5004 6C17.5004 7.38071 18.6197 8.5 20.0004 8.5V6H17.5004ZM4.00037 15.5V18H6.50037C6.50037 16.6193 5.38108 15.5 4.00037 15.5ZM17.5004 18H20.0004V15.5C18.6197 15.5 17.5004 16.6193 17.5004 18ZM12.0004 16C14.2095 16 16.0004 14.2091 16.0004 12C16.0004 9.79086 14.2095 8 12.0004 8C9.79123 8 8.00037 9.79086 8.00037 12C8.00037 14.2091 9.79123 16 12.0004 16Z"></path></svg></span>
-                        <span className='text-white font-semibold text-[12px] mr-2 whitespace-nowrap'>
-                            Proses
-                        </span>
-
-                        <span className='absolute right-0 top-0 h-full w-6 justify-center flex items-center bg-[#DB8035]'>
-                            <span className='w-4 h-4 text-white'>
-                                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor"><path d="M11.9999 13.1714L16.9497 8.22168L18.3639 9.63589L11.9999 15.9999L5.63599 9.63589L7.0502 8.22168L11.9999 13.1714Z"></path></svg>
-                            </span>
-                        </span>
-                    </button>
+                    <ConfirmButton />
                 </div>
             </div>
         </aside>
@@ -123,6 +112,52 @@ const Sidebar = () => {
 }
 
 export default Sidebar;
+
+
+const ConfirmButton = () => {
+    const [showMore, setShowMore] = useState(false);
+    const menuRef = useRef<HTMLDivElement>(null);
+
+    useEffect(() => {
+        const handleClickOutside = (event: MouseEvent) => {
+            if (menuRef.current && !menuRef.current.contains(event.target as Node)) {
+                setShowMore(false);
+            }
+        };
+
+        document.addEventListener('mousedown', handleClickOutside);
+        return () => document.removeEventListener('mousedown', handleClickOutside);
+    }, []);
+
+    const toggleShowMore = () => {
+        setShowMore((currentValue) => !currentValue);
+    }
+
+    return (
+        <div className="relative" ref={menuRef}>
+            <div className="bg-orange-400 rounded-[15px] px-8 py-3 hover:brightness-95 overflow-hidden">
+                <button type="button" className='flex gap-x-2.5 items-center cursor-pointer'>
+                    <span className='w-4 h-4 text-white'><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor"><path d="M3.00488 4.00293H21.0049C21.5572 4.00293 22.0049 4.45064 22.0049 5.00293V19.0029C22.0049 19.5552 21.5572 20.0029 21.0049 20.0029H3.00488C2.4526 20.0029 2.00488 19.5552 2.00488 19.0029V5.00293C2.00488 4.45064 2.4526 4.00293 3.00488 4.00293ZM6.50037 6H4.00037V8.5C5.38108 8.5 6.50037 7.38071 6.50037 6ZM17.5004 6C17.5004 7.38071 18.6197 8.5 20.0004 8.5V6H17.5004ZM4.00037 15.5V18H6.50037C6.50037 16.6193 5.38108 15.5 4.00037 15.5ZM17.5004 18H20.0004V15.5C18.6197 15.5 17.5004 16.6193 17.5004 18ZM12.0004 16C14.2095 16 16.0004 14.2091 16.0004 12C16.0004 9.79086 14.2095 8 12.0004 8C9.79123 8 8.00037 9.79086 8.00037 12C8.00037 14.2091 9.79123 16 12.0004 16Z"></path></svg></span>
+                    <span className='text-white font-semibold text-[12px] mr-2 whitespace-nowrap'>
+                        Proses
+                    </span>
+                </button>
+
+                <button type="button" onClick={toggleShowMore} className='absolute right-0 top-0 h-full w-6 justify-center flex items-center bg-[#DB8035] rounded-r-[15px] cursor-pointer'>
+                    <span className='w-4 h-4 text-white'>
+                        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor"><path d="M11.9999 13.1714L16.9497 8.22168L18.3639 9.63589L11.9999 15.9999L5.63599 9.63589L7.0502 8.22168L11.9999 13.1714Z"></path></svg>
+                    </span>
+                </button>
+            </div>
+
+            {showMore && <ul className="bg-white/80 rounded-[15px] border border-slate-200 absolute bottom-[50px] right-0 w-[150px] overflow-hidden">
+                <li>
+                    <Menu title="Simpan Pesanan" />
+                </li>
+            </ul>}
+        </div>
+    )
+}
 
 /**
  * Sidebar menu
