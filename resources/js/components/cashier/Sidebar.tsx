@@ -1,5 +1,6 @@
 import { Order } from "@/types";
 import OrderItem from "@/components/cashier/OrderItem";
+import { useEffect, useRef, useState } from "react";
 
 const orders: Order[] = [
     {
@@ -37,18 +38,13 @@ const orders: Order[] = [
     },
 ];
 
-
 const Sidebar = () => {
     return (
         <aside className='bg-white rounded-[15px] border border-slate-200 overflow-hidden m-1.5 py-6 sticky h-[calc(100vh-75px)] top-[70px] right-0 w-[700px] flex flex-col gap-y-5'>
             <div className='flex flex-col gap-y-1 px-7'>
                 <div className='flex justify-between'>
                     <h1 className='font-bold text-[16px] text-slate-800'>Daftar Pesanan (4)</h1>
-                    <button type="button" className='bg-orange-50 rounded-full p-2 flex justify-center items-center hover:brightness-95 cursor-pointer'>
-                        <span className='text-orange-400 w-4 h-4'>
-                            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor"><path d="M12 3C10.9 3 10 3.9 10 5C10 6.1 10.9 7 12 7C13.1 7 14 6.1 14 5C14 3.9 13.1 3 12 3ZM12 17C10.9 17 10 17.9 10 19C10 20.1 10.9 21 12 21C13.1 21 14 20.1 14 19C14 17.9 13.1 17 12 17ZM12 10C10.9 10 10 10.9 10 12C10 13.1 10.9 14 12 14C13.1 14 14 13.1 14 12C14 10.9 13.1 10 12 10Z"></path></svg>
-                        </span>
-                    </button>
+                    <SidebarMenu />
                 </div>
                 <p className='font-normal text-[14px] text-slate-800'>Sesuaikan pesanan atau langsung terima pembayaran.</p>
             </div>
@@ -127,3 +123,58 @@ const Sidebar = () => {
 }
 
 export default Sidebar;
+
+/**
+ * Sidebar menu
+ */
+const SidebarMenu = () => {
+    const [showMenu, setShowMenu] = useState(false);
+    const menuRef = useRef<HTMLDivElement>(null);
+
+    useEffect(() => {
+        const handleClickOutside = (event: MouseEvent) => {
+            if (menuRef.current && !menuRef.current.contains(event.target as Node)) {
+                setShowMenu(false);
+            }
+        };
+
+        document.addEventListener('mousedown', handleClickOutside);
+        return () => document.removeEventListener('mousedown', handleClickOutside);
+    }, []);
+
+    const toggleShowMenu = () => {
+        setShowMenu((currentValue) => !currentValue);
+    }
+
+    return (
+        <div className="relative" ref={menuRef}>
+            <button type="button" className='bg-orange-50 rounded-full p-2 flex justify-center items-center hover:brightness-95 cursor-pointer' onClick={toggleShowMenu}>
+                <span className='text-orange-400 w-4 h-4'>
+                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor"><path d="M12 3C10.9 3 10 3.9 10 5C10 6.1 10.9 7 12 7C13.1 7 14 6.1 14 5C14 3.9 13.1 3 12 3ZM12 17C10.9 17 10 17.9 10 19C10 20.1 10.9 21 12 21C13.1 21 14 20.1 14 19C14 17.9 13.1 17 12 17ZM12 10C10.9 10 10 10.9 10 12C10 13.1 10.9 14 12 14C13.1 14 14 13.1 14 12C14 10.9 13.1 10 12 10Z"></path></svg>
+                </span>
+            </button>
+
+            {showMenu && <ul className="bg-white/80 rounded-[15px] border border-slate-200 absolute top-[40px] right-0 w-[150px] overflow-hidden">
+                <li>
+                    <Menu title="Pesanan Tersimpan" />
+                    <Menu title="Reset" />
+                </li>
+            </ul>}
+        </div>
+    )
+}
+
+interface MenuProps extends React.ButtonHTMLAttributes<HTMLButtonElement> {
+    title: string;
+}
+
+/**
+ * Menu
+ */
+const Menu = (props: MenuProps) => {
+    const { title, ...restProps } = props;
+
+    return (
+        <button type="button" className='text-slate-800 cursor-pointer font-normal text-[12px] px-4 inline-block py-3 hover:brightness-90 bg-white/80 w-full' {...restProps}>{title}</button>
+    )
+}
