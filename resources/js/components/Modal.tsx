@@ -11,8 +11,8 @@ const Modal = ({ children, show }: { show: boolean, children: React.ReactNode })
     }, [show]);
 
     if (show) {
-        return createPortal(<div className="fixed bg-black/50 w-screen h-screen left-0 top-0 z-30 flex justify-center items-center">
-            <div className="bg-white absolute rounded-[15px] overflow-hidden border border-slate-200">
+        return createPortal(<div className="fixed bg-black/50 w-screen h-screen left-0 top-0 z-30 flex justify-center items-center backdrop-blur-xs">
+            <div className="bg-white/95 absolute rounded-[15px] overflow-hidden border border-slate-200">
                 {children}
             </div>
         </div>, document.body)
