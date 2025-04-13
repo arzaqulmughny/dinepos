@@ -1,10 +1,20 @@
+import { toast } from "react-toastify";
+import { useModal } from "../Modal";
+import SelectAttributeModal from "./SelectAttributeModal";
+
 const PlusIcon = () => {
     return (
         <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor"><path d="M11 11V5H13V11H19V13H13V19H11V13H5V11H11Z"></path></svg>
     )
 }
 
-const MenuItem = () => {
+interface MenuItemProps {
+    onAdd?: () => void;
+}
+
+const MenuItem = (props: MenuItemProps) => {
+    const { onAdd = () => { } } = props;
+
     return (
         <div className="bg-white rounded-[15px] flex flex-col overflow-hidden">
             <div className='relative'>
@@ -24,7 +34,7 @@ const MenuItem = () => {
                         <p className='text-slate-800 text-[16px] font-semibold'>Rp. 15.000.00</p>
                     </div>
 
-                    <button type="button" className='bg-orange-400 text-white hover:brightness-95 w-[42px] h-[42px] flex justify-center items-center rounded-full overflow-hidden cursor-pointer'>
+                    <button type="button" onClick={onAdd} className='bg-orange-400 text-white hover:brightness-95 w-[42px] h-[42px] flex justify-center items-center rounded-full overflow-hidden cursor-pointer'>
                         <span className='w-6'>
                             <PlusIcon />
                         </span>
@@ -36,14 +46,29 @@ const MenuItem = () => {
 }
 
 const List = () => {
+    const { show: showSelectAttributeModal, open: openSelectAttributeModal, close: closeSelectAttributeModal } = useModal();
+
+    const handleAddItemWithVariant = () => {
+        closeSelectAttributeModal();
+        toast.success('Berhasil menambahkan menu')
+    }
+
+    const handleAddItem = () => {
+        openSelectAttributeModal();
+    }
+
     return (
-        <ul className="grid grid-cols-[repeat(auto-fit,_minmax(250px,_1fr))] gap-[22px] w-full">
-            {Array.from({ length: 10 }).map((_, index) => (
-                <li key={index}>
-                    <MenuItem />
-                </li>
-            ))}
-        </ul>
+        <>
+            <ul className="grid grid-cols-[repeat(auto-fit,_minmax(250px,_1fr))] gap-[22px] w-full">
+                {Array.from({ length: 10 }).map((_, index) => (
+                    <li key={index}>
+                        <MenuItem onAdd={handleAddItem} />
+                    </li>
+                ))}
+            </ul>
+
+            <SelectAttributeModal show={showSelectAttributeModal} onClose={closeSelectAttributeModal} onAdd={handleAddItemWithVariant} />
+        </>
     )
 }
 
