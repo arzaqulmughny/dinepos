@@ -1,4 +1,6 @@
 import Header from '@/components/cashier/Header';
+import DetailOrderModal from '@/components/history/DetailOrderModal';
+import { useModal } from '@/components/Modal';
 import Table from '@/components/Table';
 import React from 'react';
 import Layout from './Layout';
@@ -34,21 +36,11 @@ const datafields = [
         type: 'string',
         sortable: true,
     },
-    {
-        key: 'actions',
-        label: 'Aksi',
-        type: 'raw',
-        children: (
-            <div className="flex items-center gap-2">
-                <button type="button" className="cursor-pointer rounded-md bg-orange-400 px-2 py-1 text-white hover:brightness-95">
-                    Lihat
-                </button>
-            </div>
-        ),
-    },
 ];
 
 const History = () => {
+    const { show: showDetailOrderModal, close: closeDetailOrderModal, open: openDetailOrderModal } = useModal();
+
     return (
         <div className="flex w-full flex-col gap-y-9 p-6">
             <Header
@@ -57,7 +49,25 @@ const History = () => {
             />
 
             <Table
-                datafields={datafields}
+                datafields={[
+                    ...datafields,
+                    {
+                        key: 'actions',
+                        label: 'Aksi',
+                        type: 'raw',
+                        children: (
+                            <div className="flex items-center gap-2">
+                                <button
+                                    onClick={openDetailOrderModal}
+                                    type="button"
+                                    className="cursor-pointer rounded-md bg-orange-400 px-2 py-1 text-white hover:brightness-95"
+                                >
+                                    Lihat
+                                </button>
+                            </div>
+                        ),
+                    },
+                ]}
                 options={{ pagination: true }}
                 data={[
                     {
@@ -90,6 +100,8 @@ const History = () => {
                     },
                 ]}
             />
+
+            <DetailOrderModal show={showDetailOrderModal} onClose={closeDetailOrderModal} onPrintInvoice={() => {}} />
         </div>
     );
 };
